@@ -60,6 +60,12 @@
         button:hover {
             background-color: #C2185B; /* Đổi màu khi hover */
         }
+        .success-message {
+            color: green;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -117,6 +123,11 @@ async function sendForm(formData) {
 
     let result = await response.json();
     alert(result.message);
+    // Hiển thị thông báo thành công
+    if (result.message === "Đơn đã gửi thành công!") {
+        document.getElementById("successMessage").style.display = "block";
+        document.getElementById("orderForm").reset(); // Reset form
+    }
 }
 </script>
 
