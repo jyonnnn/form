@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Đặt Hàng</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F8E1F4; /* Màu hồng nhạt nền */
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        h2 {
+            color: #D32F2F; /* Màu đỏ nhạt cho tiêu đề */
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            border: 2px solid #F8BBD0; /* Khung đỏ nhạt */
+            background-color: #FCE4EC; /* Nền form màu hồng nhạt */
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #D32F2F; /* Màu chữ đỏ nhạt cho label */
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #F48FB1; /* Màu khung nhẹ nhàng */
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #D32F2F; /* Màu đỏ nhạt cho nút */
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #C2185B; /* Đổi màu khi hover */
+        }
+    </style>
+</head>
+<body>
+
+<h2>Form Đặt Hàng</h2>
+<form id="orderForm">
+    <label for="giftSet">Set quà:</label>
+    <input type="text" id="giftSet" name="giftSet" required>
+
+    <label for="customerName">Tên khách hàng:</label>
+    <input type="text" id="customerName" name="customerName" required>
+
+    <label for="address">Địa chỉ:</label>
+    <input type="text" id="address" name="address" required>
+
+    <label for="phone">SĐT:</label>
+    <input type="text" id="phone" name="phone" required>
+
+    <label for="paymentProof">Ảnh chuyển khoản:</label>
+    <input type="file" id="paymentProof" name="paymentProof" accept="image/*">
+
+    <button type="submit">Gửi đơn</button>
+</form>
+
+<script>
+document.getElementById("orderForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+    
+    let formData = new FormData();
+    formData.append("giftSet", document.getElementById("giftSet").value);
+    formData.append("customerName", document.getElementById("customerName").value);
+    formData.append("address", document.getElementById("address").value);
+    formData.append("phone", document.getElementById("phone").value);
+    
+    const fileInput = document.getElementById("paymentProof").files[0];
+    if (fileInput) {
+        const reader = new FileReader();
+        reader.onload = async function() {
+            const base64Image = reader.result.split(",")[1];
+            formData.append("paymentProof", base64Image);
+
+            await sendForm(formData);
+        };
+        reader.readAsDataURL(fileInput);
+    } else {
+        await sendForm(formData);
+    }
+});
+
+async function sendForm(formData) {
+    let response = await fetch("https://script.google.com/macros/s/AKfycbzAvlxV1HEQlq5XoZxRFtfOCz_7K23ghP0VXEnUMepDa-gqeSQnLo9z6ni6-Q5QWN51/exec", {
+        method: "POST",
+        body: formData
+    });
+
+    let result = await response.json();
+    alert(result.message);
+}
+</script>
+
+</body>
+</html>
